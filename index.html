@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Krida Studios</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Favicon -->
+    <link rel="icon" href="./assets/favicon/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon/favicon-16x16.png">
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./assets/favicon/favicon-180x180.png">
+
+    <!-- Theme color (mobile browsers) -->
+    <meta name="theme-color" content="#ffffff">
+
+
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+</head>
+
+
+<body>
+
+    <!-- Cookie & T&C Modal -->
+    <div id="consentModal" class="consent-modal">
+        <div class="consent-box">
+            <h2>Cookies & Terms</h2>
+            <p>
+                We use cookies and audio features to enhance your experience.
+                By continuing, you agree to our Terms & Conditions and allow
+                media playback.
+            </p>
+            <div class="consent-actions">
+                <button id="acceptConsent">Accept & Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <!-- Title -->
+        <div class="title">
+            <div class="logo">
+                <img src="./assets/logo.png" alt="Krida Studios Logo" />
+            </div>
+
+            <div class="title-line"></div>
+
+            <div class="title-text">
+                <h1>
+                    <span>Kridā</span><br />
+                    <span>Studios</span>
+                </h1>
+            </div>
+        </div>
+
+        <!-- CENTER CONTENT -->
+        <div class="page-content">
+            <p id="content">
+                Welcome to Krida Studios — where games, music and ideas collide.
+            </p>
+        </div>
+
+        <!-- Right-side control cluster -->
+        <div class="controls">
+
+            <!-- ARC WRAPPER -->
+            <div class="arc">
+                <button class="nav-btn home" data-section="home" aria-label="Home">
+                    <i class="fa-solid fa-house"></i>
+                </button>
+
+                <button class="nav-btn about" data-section="about" aria-label="About">
+                    <i class="fa-solid fa-info-circle"></i>
+                </button>
+
+                <button class="nav-btn games" data-section="games" aria-label="Games">
+                    <i class="fa-solid fa-gamepad"></i>
+                </button>
+
+                <button class="nav-btn contact" data-section="contact" aria-label="Contact">
+                    <i class="fa-solid fa-envelope"></i>
+                </button>
+
+            </div>
+
+
+            <!-- MUSIC BUTTON -->
+            <div id="musicBtn" class="music-btn">▶</div>
+        </div>
+
+
+        <audio id="bgMusic" loop muted autoplay>
+            <source src="./assets/bg-music.ogg" type="audio/mpeg">
+        </audio>
+
+        <audio id="hoverSound" preload="auto">
+            <source src="./assets/hover.ogg" type="audio/mpeg">
+        </audio>
+
+
+        <!-- Bottom-left circular video -->
+        <div class="video-orb">
+            <video autoplay muted loop playsinline>
+                <source src="./assets/video.webm" type="video/webm">
+            </video>
+        </div>
+
+        <footer class="site-footer">
+            Built with <span class="heart">❤</span> in India, i.e., <strong>Bharat</strong>
+        </footer>
+
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Eternal Vault | Senior Edition</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --accent: #ff4d6d;
+            --bg-base: #0a0a1a;
+        }
+
+        /* Fixed the mobile height issue using dvh */
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            min-height: 100dvh;
+            width: 100%;
+            font-family: 'Quicksand', sans-serif;
+            background: var(--bg-base);
+            color: white;
+            overflow-x: hidden;
+            transition: background 1.2s ease;
+        }
+
+        /* Canvas stays fixed and covers dynamic height */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100dvh;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        #gate {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(25px);
+            z-index: 3000;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .gate-card {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 50px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 450px;
+        }
+
+        #vault-ui {
+            display: none;
+            opacity: 0;
+            padding: 40px 20px;
+            text-align: center;
+            min-height: 100dvh;
+            box-sizing: border-box;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            z-index: 1000;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        .day-card {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .locked {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        #reveal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 5000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 5vw;
+            background: inherit;
+        }
+
+        .reveal-title {
+            font-family: 'Dancing Script';
+            font-size: clamp(3.5rem, 10vw, 6rem);
+            color: var(--accent);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 1s ease;
+        }
+
+        .reveal-text {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 900px;
+            font-size: clamp(1.4rem, 4vw, 2.2rem);
+            line-height: 1.6;
+            text-align: center;
+            /* Added gap for spacing */
+            gap: 0.7rem;
+        }
+
+        .word {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        .active {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+
+        .back-btn {
+            margin-top: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+
+        .btn-yes {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 15px 60px;
+            font-size: 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+
+        #no-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 4000;
+        }
+
+        /* ---------------- FOOTER ---------------- */
+        .site-footer {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 13px;
+            opacity: 0.75;
+            z-index: 6000;
+            pointer-events: auto;
+        }
+
+        .site-footer .footer-text {
+            margin-top: 6px;
+        }
+
+        .site-footer .heart {
+            color: var(--accent);
+            margin: 0 4px;
+        }
+
+        /* Home link */
+        .home-link {
+            display: inline-block;
+            margin-bottom: 6px;
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            transition: background 0.25s ease, transform 0.25s ease;
+        }
+
+        .home-link:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-2px);
+        }
+
+        /* -------- REMOVE DEFAULT <a> STYLES -------- */
+        a {
+            all: unset;
+            /* removes all browser defaults */
+            cursor: pointer;
+            /* keeps it clickable */
+        }
+
+        a:focus,
+        a:active {
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="background-canvas"></canvas>
+
+    <div id="gate">
+        <div class="gate-card">
+            <h1 style="font-family: 'Dancing Script'; font-size: 3.5rem; margin-bottom: 10px;">Hey Beautiful...</h1>
+            <p style="opacity: 0.8; margin-bottom: 30px;">Will you be my Valentine?</p>
+            <div id="action-area" style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+                <button class="btn-yes" onclick="unlock()">Yes!</button>
+                <button id="no-btn">No</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="vault-ui">
+        <h1 style="font-family: 'Dancing Script'; font-size: 4rem;">The Love Vault</h1>
+        <div class="grid" id="vault-grid"></div>
+    </div>
+
+    <div id="reveal-overlay">
+        <div id="reveal-title" class="reveal-title"></div>
+        <div id="reveal-text" class="reveal-text"></div>
+        <button class="back-btn" onclick="closeReveal()">Return to Vault</button>
+    </div>
+
+    <footer class="site-footer">
+        <a href="games.html" class="home-link">← Back to games</a>
+        <div class="footer-text">
+            Built with <span class="heart">❤</span> in India, i.e., <strong>Bharat</strong>
+        </div>
+    </footer>
+
+
+
+
+    <script>
+        // --- 1. BOKEH ENGINE ---
+        const canvas = document.getElementById('background-canvas');
+        const ctx = canvas.getContext('2d');
+        let circles = [];
+        let currentTheme = { bg: '#0a0a1a', bokeh: 'rgba(255, 77, 109, 0.15)' };
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            circles = [];
+            for (let i = 0; i < 25; i++) {
+                circles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: Math.random() * 150 + 50, dx: (Math.random() - 0.5) * 0.4, dy: (Math.random() - 0.5) * 0.4 });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.body.style.backgroundColor = currentTheme.bg;
+            circles.forEach(c => {
+                ctx.beginPath(); ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+                ctx.fillStyle = currentTheme.bokeh; ctx.fill();
+                c.x += c.dx; c.y += c.dy;
+                if (c.x < -c.r) c.x = canvas.width + c.r; if (c.x > canvas.width + c.r) c.x = -c.r;
+                if (c.y < -c.r) c.y = canvas.height + c.r; if (c.y > canvas.height + c.r) c.y = -c.r;
+            });
+            requestAnimationFrame(draw);
+        }
+        initCanvas(); draw();
+        window.addEventListener('resize', initCanvas);
+
+        // --- 2. THE EVASIVE NO BUTTON ---
+        const noBtn = document.getElementById('no-btn');
+        let hasMoved = false;
+
+        function moveNoButton() {
+            if (!hasMoved) {
+                noBtn.style.position = 'fixed';
+                hasMoved = true;
+            }
+            const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        noBtn.addEventListener('mouseover', moveNoButton);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); });
+
+        // --- 3. LOGIC ---
+        function unlock() {
+            noBtn.style.display = 'none';
+            const g = document.getElementById('gate');
+            g.style.opacity = '0';
+            g.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                g.style.display = 'none';
+                const v = document.getElementById('vault-ui');
+                v.style.display = 'block';
+                setTimeout(() => {
+                    v.style.opacity = '1';
+                    renderGrid();
+                }, 10);
+            }, 800);
+        }
+
+        const timeline = [
+            { d: 7, n: "Rose Day", w: "Like a rose, my love for you grows more beautiful with every passing day. You are the fragrance in my life's garden.", t: { bg: '#2d0a0a', bk: 'rgba(255, 0, 0, 0.2)' } },
+            { d: 8, n: "Propose Day", w: "I don't just want you for a day, I want you for every tomorrow we haven't seen yet. Stay with me forever.", t: { bg: '#1a0a2d', bk: 'rgba(157, 78, 221, 0.2)' } },
+            { d: 9, n: "Chocolate Day", w: "You are the sweetness that balances all the bitterness in the world. Life with you is a treat I never want to end.", t: { bg: '#2d1a0a', bk: 'rgba(255, 183, 3, 0.15)' } },
+            { d: 10, n: "Teddy Day", w: "Whenever you feel lonely, remember I'm always here to hold you tight. You are my most precious comfort.", t: { bg: '#0a1a2d', bk: 'rgba(72, 202, 228, 0.15)' } },
+            { d: 11, n: "Promise Day", w: "I promise to stand by you through every storm and celebrate with you in every sunshine. I am yours, always.", t: { bg: '#0a2d1a', bk: 'rgba(82, 183, 136, 0.15)' } },
+            { d: 12, n: "Hug Day", w: "A hug from you makes the whole world disappear. It's the only place I ever want to call home.", t: { bg: '#2d0a1a', bk: 'rgba(255, 112, 150, 0.2)' } },
+            { d: 13, n: "Kiss Day", w: "A thousand words couldn't say what one kiss from you reveals. You are my heart's favorite song.", t: { bg: '#3d001a', bk: 'rgba(255, 0, 110, 0.2)' } },
+            { d: 14, n: "Valentine's Day", w: "You are my greatest adventure and my favorite person. Happy Valentine's Day, my love. Forever isn't long enough.", t: { bg: '#4a0e0e', bk: 'rgba(255, 77, 109, 0.3)' } }
+        ];
+
+        function renderGrid() {
+            const grid = document.getElementById('vault-grid');
+            const today = new Date().getDate();
+            const isFeb = new Date().getMonth() === 1;
+            grid.innerHTML = '';
+            timeline.forEach(item => {
+                const card = document.createElement('div');
+                const isLocked = !isFeb || today < item.d;
+                card.className = `day-card ${isLocked ? 'locked' : ''}`;
+                card.innerHTML = `<div style="font-size: 2.5rem; margin-bottom: 10px;">${isLocked ? '🔒' : '💖'}</div><div style="font-weight:bold;">${item.n}</div>`;
+                if (!isLocked) card.onclick = () => showMessage(item);
+                grid.appendChild(card);
+            });
+        }
+
+        function showMessage(item) {
+            currentTheme = { bg: item.t.bg, bokeh: item.t.bk };
+            const vault = document.getElementById('vault-ui');
+            const overlay = document.getElementById('reveal-overlay');
+            vault.style.opacity = '0';
+            setTimeout(() => {
+                vault.style.display = 'none';
+                overlay.style.display = 'flex';
+                const title = document.getElementById('reveal-title');
+                const textCont = document.getElementById('reveal-text');
+                title.innerText = item.n;
+                textCont.innerHTML = '';
+                setTimeout(() => title.classList.add('active'), 100);
+
+                // Fixed spacing by appending text nodes
+                item.w.split(' ').forEach((word, i) => {
+                    const span = document.createElement('span');
+                    span.innerText = word;
+                    span.className = 'word';
+                    span.style.transitionDelay = `${(i * 0.1) + 0.5}s`;
+                    textCont.appendChild(span);
+                    // Add physical space
+                    textCont.appendChild(document.createTextNode(' '));
+                    setTimeout(() => span.classList.add('active'), 100);
+                });
+            }, 500);
+        }
+
+        function closeReveal() {
+            document.getElementById('reveal-overlay').style.display = 'none';
+            const v = document.getElementById('vault-ui');
+            v.style.display = 'block';
+            currentTheme = { bg: '#0a0a1a', bokeh: 'rgba(255, 77, 109, 0.15)' };
+            setTimeout(() => v.style.opacity = '1', 10);
+        }
+    </script>
+</body>
+
+</html>

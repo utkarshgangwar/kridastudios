@@ -1,0 +1,656 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", system-ui, sans-serif;
+}
+
+body {
+    background: #ffffff;
+    color: #0b0b0b;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.container {
+    height: 100vh;
+    position: relative;
+}
+
+/* ---------------- TITLE ---------------- */
+.title {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    display: flex;
+    align-items: center;
+    /* ✅ changed */
+    gap: 22px;
+    max-width: 420px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    /* ✅ centers logo vertically */
+}
+
+.logo img {
+    width: 100px;
+    height: auto;
+    opacity: 0.95;
+}
+
+/* Vertical line */
+.title-line {
+    width: 2px;
+    height: 150px;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.1),
+            rgba(0, 0, 0, 0.8),
+            rgba(0, 0, 0, 0.1));
+}
+
+/* Title text */
+.title-text h1 {
+    font-size: 52px;
+    letter-spacing: 2px;
+    line-height: 1.1;
+}
+
+.title-text p {
+    margin-top: 18px;
+    opacity: 0.75;
+}
+
+/* ---------------- CONTROL CLUSTER ---------------- */
+.controls {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    width: 300px;
+    height: 300px;
+    transform: translateY(-50%);
+}
+
+/* Music Button */
+.music-btn {
+    position: absolute;
+    top: 50%;
+    left: 65%;
+    transform: translate(-50%, -50%);
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #f9f9f9, #e0e0e0);
+    color: #000;
+    font-size: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    /* dark soft glow for white bg */
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.15),
+        inset 0 0 0 rgba(0, 0, 0, 0);
+
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.music-btn:hover {
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.25);
+    transform: translate(-50%, -50%) scale(1.08);
+}
+
+/* Small nav buttons */
+.nav-btn {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #111;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+
+    transition:
+        transform 0.25s cubic-bezier(.34, 1.56, .64, 1),
+        background 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.nav-btn:hover {
+    transform: scale(1.4);
+    background: #000;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------------- SEMI-CIRCLE POSITIONS ---------------- */
+/* LEFT-facing arc */
+.home {
+    top: 10px;
+    left: 110px;
+}
+
+.about {
+    top: 85px;
+    left: 45px;
+}
+
+.games {
+    bottom: 85px;
+    left: 45px;
+}
+
+.contact {
+    bottom: 10px;
+    left: 110px;
+}
+
+/* ---------------- CENTER PAGE CONTENT ---------------- */
+.page-content {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    max-width: 520px;
+}
+
+.page-content p {
+    font-size: 18px;
+    line-height: 1.6;
+    opacity: 0.85;
+}
+
+/* ---------------- TABLET ---------------- */
+/* @media (max-width: 1024px) {
+
+    .title {
+        left: 6%;
+        top: 6%;
+    }
+
+    .page-content {
+        left: 45%;
+        max-width: 420px;
+    }
+
+    .controls {
+        right: 40px;
+        transform: translateY(-50%) scale(0.9);
+    }
+} */
+
+/* ---------------- MOBILE ---------------- */
+/* @media (max-width: 768px) {
+
+    body {
+        overflow-y: auto;
+    }
+
+    .title {
+        position: relative;
+        top: 0;
+        left: 0;
+        padding: 24px;
+    }
+
+    .page-content {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
+        padding: 24px;
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .controls {
+        position: relative;
+        top: auto;
+        right: auto;
+        transform: none;
+        margin: 40px auto 0;
+    }
+
+    .music-btn {
+        left: 50%;
+    }
+} */
+
+
+/* ---------------- CIRCULAR VIDEO ORB ---------------- */
+.video-orb {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    overflow: hidden;
+    pointer-events: none;
+    /* purely visual */
+}
+
+/* Video fills the circle */
+.video-orb video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* 🔥 crops rectangular video into circle */
+    border-radius: 50%;
+}
+
+/* Fading frame effect */
+.video-orb::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+            rgba(255, 255, 255, 0) 55%,
+            rgba(255, 255, 255, 0.6) 70%,
+            rgba(255, 255, 255, 1) 100%);
+    pointer-events: none;
+}
+
+/* ---------------- TOOLTIP ---------------- */
+.nav-btn::after {
+    content: attr(aria-label);
+    position: absolute;
+    right: 60px;
+    /* tooltip appears to the left */
+    top: 50%;
+    transform: translateY(-50%) translateX(6px);
+
+    background: rgba(0, 0, 0, 0.85);
+    color: #fff;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+
+    opacity: 0;
+    pointer-events: none;
+
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Tooltip arrow */
+.nav-btn::before {
+    content: "";
+    position: absolute;
+    right: 52px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgba(0, 0, 0, 0.85);
+
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.nav-btn:hover::after,
+.nav-btn:hover::before {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+/* ---------------- CONSENT MODAL ---------------- */
+.consent-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.consent-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.consent-box h2 {
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.consent-box p {
+    font-size: 14px;
+    opacity: 0.75;
+    line-height: 1.6;
+}
+
+.consent-actions {
+    margin-top: 24px;
+}
+
+.consent-actions button {
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    font-size: 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.consent-actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Hide modal */
+.consent-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* ---------------- Tablet Mobile ---------------- */
+/* ================== TABLET LAYOUT RESET ================== */
+@media (max-width: 1024px) {
+
+    /* Allow scrolling */
+    body {
+        overflow-y: auto;
+    }
+
+    .container {
+        height: auto;
+        position: relative;
+        /* padding-bottom: 160px; */
+        bottom: 0;
+        padding-bottom: env(safe-area-inset-bottom);
+
+        /* space for navbar */
+    }
+
+    /* -------- TITLE -------- */
+    .title {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin: 40px auto 20px;
+        justify-content: center;
+    }
+
+    /* -------- CENTER CONTENT -------- */
+    .page-content {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
+
+        margin: 40px auto;
+        padding: 0 32px;
+
+        max-width: 520px;
+        text-align: center;
+        z-index: 1;
+    }
+
+    /* -------- CONTROLS → TRANSLUCENT BOTTOM NAVBAR -------- */
+    .controls {
+        position: fixed;
+        bottom: -38px;
+        left: 0;
+        right: 0;
+        top: auto;
+
+        width: 100%;
+        height: 72px;
+
+        background: rgba(255, 255, 255, 0.6);
+        /* 👈 translucent */
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.12);
+
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+
+        z-index: 999;
+    }
+
+
+    /* Hide music circle on tablet navbar */
+    .music-btn {
+        display: none;
+    }
+
+    /* Flatten nav buttons */
+    .nav-btn {
+        position: relative;
+        width: 44px;
+        height: 44px;
+        transform: none;
+    }
+
+    .nav-btn:hover {
+        transform: scale(1.15);
+    }
+
+    /* Disable arc layout */
+    .home,
+    .about,
+    .games,
+    .contact {
+        top: auto;
+        bottom: auto;
+        left: auto;
+        right: auto;
+    }
+
+    /* -------- VIDEO GOES LAST -------- */
+    .video-orb {
+        position: relative;
+        margin: 60px auto 40px;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        top: auto;
+
+        width: 200px;
+        height: 200px;
+    }
+
+    /* Disable tooltips on tablet */
+    .nav-btn::after,
+    .nav-btn::before {
+        display: none;
+    }
+
+    /* -------- ENSURE DYNAMIC CONTENT IS VISIBLE -------- */
+    .page-content {
+        position: relative;
+
+        margin: 40px auto 120px;
+        /* bottom space for navbar */
+        padding: 0 32px;
+
+        max-width: 520px;
+        min-height: 120px;
+        /* 🔥 ensures space for text swap */
+
+        text-align: center;
+        z-index: 2;
+        /* above background, below navbar */
+    }
+
+    /* Smooth visibility when content changes */
+    .page-content p {
+        transition: opacity 0.25s ease;
+    }
+
+}
+
+/* ================= DESKTOP TOOLTIP RESTORE ================= */
+@media (min-width: 1025px) {
+
+    .nav-btn::after,
+    .nav-btn::before {
+        display: block;
+        opacity: 0;
+    }
+
+    .nav-btn:hover::after,
+    .nav-btn:hover::before {
+        opacity: 1;
+    }
+}
+
+
+/* ---------------- FOOTER ---------------- */
+.site-footer {
+    width: 100%;
+    text-align: center;
+    padding: 24px 16px;
+    font-size: 14px;
+    opacity: 0.7;
+    letter-spacing: 0.3px;
+}
+
+/* Heart styling */
+.site-footer .heart {
+    color: #e11d48;
+    /* soft red */
+    margin: 0 4px;
+}
+
+/* Desktop footer positioning */
+@media (min-width: 1025px) {
+    .site-footer {
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+/* Tablet & Mobile footer flow */
+@media (max-width: 1024px) {
+    .site-footer {
+        position: relative;
+        margin: 40px auto 24px;
+    }
+}
+
+/* ---------------- GAMES LIST ---------------- */
+.games-list {
+    margin: 80px auto 160px;
+    /* ⬅ more top & bottom spacing */
+    max-width: 520px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.games-list.hidden {
+    display: none;
+}
+
+
+.game-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    text-align: center;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+.game-card img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.game-card h3 {
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.game-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* Coming soon styling */
+.game-card.coming-soon {
+    position: relative;
+    opacity: 0.85;
+}
+
+.game-card .badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #000;
+    color: #fff;
+    font-size: 11px;
+    padding: 6px 10px;
+    border-radius: 999px;
+}
+
+/* ---------------- GAMES CTA BUTTON ---------------- */
+.games-cta-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 12px 22px;
+    border-radius: 999px;
+
+    background: #000;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.games-cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Home link */
+.home-link {
+    display: inline-block;
+    margin-bottom: 6px;
+    color: rgb(51, 44, 44);
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.home-link:hover {
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateY(-2px);
+}
